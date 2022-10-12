@@ -18,7 +18,7 @@ spec:
         tier: frontend
     spec:
       containers:
-      - image: php8.1-fpm-alpine
+      - image: wordpress:4.8-apache
         name: wordpress
         env:
         - name: wordpress_DB_HOST
