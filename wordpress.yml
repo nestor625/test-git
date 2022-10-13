@@ -31,12 +31,7 @@ spec:
           value: wordpress
         ports:
         - containerPort: 80
-          name: wordpress          
-      tolerations:
-      - key: "kubernetes.azure.com/scalesetpriority"
-        operator: "Equal"
-        value: "spot"
-        effect: "NoSchedule"             
+          name: wordpress             
 ---
 apiVersion: v1
 kind: Service
