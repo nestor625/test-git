@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: httpd
-        image: httpd:latest
+        image: php:zts-alpine3.16
         ports:
         - containerPort: 80
 ---
