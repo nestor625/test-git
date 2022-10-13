@@ -22,7 +22,7 @@ spec:
         name: wordpress
         env:
         - name: wordpress_DB_HOST
-          value: nestor-mysql.mysql.database.azure.com
+          value: nestor-mysql1.mysql.database.azure.com
         - name: wordpress_DB_USER
           value: nestor
         - name: wordpress_DB_PASSWORD
