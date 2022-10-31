@@ -1,0 +1,107 @@
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: videoconference
+  namespace: ahm
+  labels:
+    app: videoconference
+    env: uat
+spec:
+  selector:
+    matchLabels:
+      app: videoconference
+      env: uat
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        env: uat
+        app: videoconference
+    spec:
+      containers:
+      - image: dtgsu1ahmcr02.azurecr.io/atg.videoconference:1.0.0
+        name: videoconference
+        env:
+        - name: AtgDatabaseProvider__Provider
+          value: SqlServer
+        - name: ConnectionStrings__SqlServer
+          value: Server=tcp:dtgs2-u1-ahm-sql-01.database.windows.net,1433;Initial Catalog=videoconference;Persist Security Info=False;User ID=appadmin;Password=sTi9hUJlstAt;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
+        - name: AtgDistributedCache__Provider
+          value: Redis
+        - name: AtgLicenseConfig__Key
+          value: 3mZB3iAAIAColr7ZcKIwUqxsAeEVrUHaWbCUFH6WhaUk0ZEkDt8/ag==
+        - name: AtgLogging__AzureBlobStorage__ConnectionString
+          value: DefaultEndpointsProtocol=https;AccountName=dtgsu1ahmst02;AccountKey=OvCccHMzXOWv25IQJiedDIKKKg2FGa+Mc2G+gbZlsFa6MubK/ENA0wRt1TITG5gxWHFklsQ47Gfn+AStVMo3Dg==;EndpointSuffix=core.windows.net
+        - name: AtgLogging__File__FilePath
+          value: /app/log.txt
+        - name: ForwardedHeaderConfig__ForwardedHeaders
+          value: "7"
+        - name: ForwardedHeaderConfig__KnownNetworks__0__IPPrefix
+          value: 10.0.0.0
+        - name: ForwardedHeaderConfig__KnownNetworks__0__PrefixLength
+          value: "8"
+        - name: IdentityAuthConfigs__0__AuthenticationScheme
+          value: Portal
+        - name: IdentityAuthConfigs__0__Authority
+          value: http://idm.ahm.svc.cluster.local
+        - name: IdentityAuthConfigs__0__RequireHttps
+          value: "false"
+        - name: PolicyConfig__BaseAddress
+          value: http://idm.ahm.svc.cluster.local
+        - name: TZ
+          value: Asia/Hong_Kong
+        ports:
+        - containerPort: 8099
+          name: app
+        resources:
+          limits:
+            cpu: 500m
+            memory: 500Mi
+          requests:
+            cpu: 50m
+            memory: 50Mi
+        readinessProbe:
+          httpGet:
+            path: /atghc
+            port: 8099
+            scheme: HTTP
+          initialDelaySeconds: 15
+          timeoutSeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: videoconference-api
+  namespace: ahm
+  labels:
+    env: uat
+    app: videoconference
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8099
+  selector:
+    app: videoconference
+    env: uat
+  type: ClusterIP
+
+
+
+
+
+
+
+
+
+
+
+
+
