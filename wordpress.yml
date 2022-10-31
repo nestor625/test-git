@@ -24,7 +24,7 @@ spec:
         - name: wordpress_DB_HOST
           value: nestor-mysql1.mysql.database.azure.com
         - name: wordpress_DB_USER
-          value: nestor1
+          value: nestor
         - name: wordpress_DB_PASSWORD
           value: 2001625aA
         - name: wordpress_DB_NAME
